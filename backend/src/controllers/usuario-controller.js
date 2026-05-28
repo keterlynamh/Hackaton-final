@@ -8,7 +8,7 @@ exports.CrearUsuario = (req,res)=>{
         apellido: req.body.apellido,
         email: req.body.email,
         password:  bcrypt.hashSync(req.body.password, 8),
-        rolId: req.body.rolId || 3,
+        rolId: req.body.rolId,
         estado: req.body.estado || true
     };
     Usuario.create(usuarioNuevo).then(data=>{
