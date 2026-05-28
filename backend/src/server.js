@@ -2,13 +2,15 @@ console.log(`Inicio de la aplicacion`);
 require(`dotenv`).config();
 
 const app = require(`./app`);
-const syncDB = require(`./config/sync-db`);
-const {sequelize} = require(`./database/models/usuario-model`);
+const db = require(`./config/db`);
+const sequelize = require("./database/models").sequelize;
 
 const PORT = process.env.PORT;
 
 async function startServer() {
-    await syncDB();
+    await sequelize.authenticate();
+
+    console.log("Base de datos conectada");
 
     app.listen(PORT, ()=>{
         console.log(`Conectado al puerto ${PORT}`);
