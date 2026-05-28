@@ -1,13 +1,15 @@
 const Usuario = require(`../database/models/usuario-model`);
+const Rol = require(`../database/models/rol-model`);
 const jwt = require(`jsonwebtoken`);
 
 
 const verificarToken = (req, res, next) => {
+    
     let token = req.session?.token;
     if(!token) return res.status(401).send({message:`No estas enviando el token`});
     jwt.verify(token, process.env.JWT_SECRET,(err,decoded)=>{
         if(err) return res.status(401).send({message:`Token invalido`});
-        req.usuarioId=decoded.id;
+        req.usuarioId = decoded.id;
         next();
     });
 }
@@ -19,10 +21,10 @@ const esModerador = async (req,res,next) => {
         });
 
         if(!usuario) return res.status(404).send({message: `Usuario no encontrado`});
-
-        const tieneRol = usuario.rols.some(r => r.nombre === "moderador");
-
-        if (tieneRol) return next();
+        
+        if (usuario.Rol && usuario.Rol.nombre === "moderador") {
+            return next();
+        }
 
         return res.status(403).send({message: `Se requiere rol de moderador `});
 
@@ -38,10 +40,10 @@ const esAdmin = async (req,res,next) => {
         });
 
         if(!usuario) return res.status(404).send({message: `Usuario no encontrado`});
-
-        const tieneRol = usuario.rols.some(r => r.nombre === "admin");
         
-        if (tieneRol) return next();
+        if (usuario.Rol && usuario.Rol.nombre === "admin") {
+            return next();
+        }
 
         return res.status(403).send({message: `Se requiere rol de admin `});
 
@@ -59,9 +61,9 @@ const esAdminOModerador = async (req,res,next) => {
 
         if(!usuario) return res.status(404).send({message: `Usuario no encontrado`});
 
-        const rolesNombres = usuario.rols.map(r => r.nombre);
+        const rol = usuario.Rol?.nombre;
         
-        if (rolesNombres.includes(`admin`) || rolesNombres.includes(`moderador`)) {
+        if (rol === "admin" || rol === "moderador") {
             return next();
         }
 
