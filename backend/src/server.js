@@ -8,6 +8,24 @@ const { Rol } = require("./database/models");
 
 const PORT = process.env.PORT;
 
+const { Categoria } = require("./database/models"); // importa tu modelo
+
+async function crearCategorias() {
+    const count = await Categoria.count();
+
+    if (count === 0) {
+        await Categoria.bulkCreate([
+            { nombre: "bocaditos", estado: true },
+            { nombre: "panes", estado: true },
+            { nombre: "postres", estado: true }
+        ]);
+
+        console.log("Categorias creadas correctamente");
+    } else {
+        console.log("Las categorias ya existen");
+    }
+}
+
 async function crearRoles() {
     try {
         const count = await Rol.count();
@@ -36,6 +54,8 @@ async function startServer() {
     await sequelize.sync();
     console.log("Tabla de datos creada")
     await crearRoles();
+
+    await crearCategorias();
 
 
     app.listen(PORT, ()=>{

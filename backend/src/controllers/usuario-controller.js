@@ -1,31 +1,51 @@
 const Usuario = require(`../database/models/usuario-model`);
 const bcrypt = require(`bcrypt`);
-const jwt = require(`jsonwebtoken`)
+const jwt = require(`jsonwebtoken`);
+const Rol = require(`../database/models/rol-model`);
 
-exports.CrearUsuario = (req,res)=>{
+exports.CrearUsuario = async (req, res) => {
+    try {
+
+        let rolIdFinal = req.body.rolId;
+
+        if (!rolIdFinal && req.body.rol) {
+            const rol = await Rol.findOne({
+                where: { nombre: req.body.rol }
+            });
+
+            if (!rol) {
+                return res.status(400).send({ message: "Rol no existe" });
+            }
+
+            rolIdFinal = rol.id;
+        }
+
+        const usuarioNuevo = {
+            nombre: req.body.nombre,
+            apellido: req.body.apellido,
+            email: req.body.email,
+            password: bcrypt.hashSync(req.body.password, 8),
+            rolId: rolIdFinal,
+            estado: req.body.estado || true
+        };
+
+        const data = await Usuario.create(usuarioNuevo);
+        res.status(201).send(data);
+
+    } catch (error) {
+        res.status(500).send(error);
+    }
+};
+
+exports.editarUsuario = (req,res)=>{
+    let usuarioId = req.params.id;
+
     const usuarioNuevo = {
         nombre: req.body.nombre,
         apellido: req.body.apellido,
         email: req.body.email,
         password:  bcrypt.hashSync(req.body.password, 8),
         rolId: req.body.rolId,
-        estado: req.body.estado || true
-    };
-    Usuario.create(usuarioNuevo).then(data=>{
-        res.status(201).send(data);
-    }).catch(error=>{
-        res.status(500).send(error);
-    })
-}
-
-exports.editarUsuario = (req,res)=>{
-    let usuarioId = req.params.id
-    const usuarioNuevo = {
-        nombre: req.body.nombre,
-        apellido: req.body.apellido,
-        email: req.body.email,
-        password:  bcrypt.hashSync(req.body.password, 8),
-        rol: req.body.rol || "cliente",
         estado: req.body.estado || true
     };
     Usuario.update(usuarioNuevo,{
