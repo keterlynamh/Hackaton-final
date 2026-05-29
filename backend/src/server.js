@@ -52,7 +52,7 @@ async function startServer() {
     await sequelize.authenticate()
     console.log("Base de datos conectada");
 
-    await sequelize.sync();
+    await sequelize.sync({ alter: true});
     console.log("Tabla de datos creada");
 
     await crearRoles();

@@ -1,20 +1,39 @@
 const Producto = require(`../database/models/producto-model`);
 const Usuario = require(`../database/models/usuario-model`);
+const Categoria = require(`../database/models/categoria-model`);
 const jwt = require(`jsonwebtoken`);
 
-exports.crearProducto = (req,res) => {
-    const productoNuevo = {
-        nombre: req.body.nombre,
-        descripcion: req.body.descripcion,
-        precio: req.body.precio,
-        categoriaId: req.body.categoriaId
-    };
 
-    Producto.create(productoNuevo).then(data=>{
-        res.status(201).send(data);
-    }).catch(error=>{
+exports.crearProducto = async (req,res) => {
+    try{
+
+        let categoriaId = req.body.categoriaId;
+
+        if(!categoriaId && req.body.categoriaId){
+            const categoria = await Categoria.findOne({
+                where: { nombre: req.body.categoria }
+            });
+
+            if (!categoria) {
+                return res.status(400).send({ message: "Categoría no existe" });
+            }
+
+            categoriaId =categoria.id;
+        }
+        
+        const productoNuevo = {
+            nombre: req.body.nombre,
+            descripcion: req.body.descripcion,
+            precio: req.body.precio,
+            categoriaId: req.body.categoriaId
+        };
+        
+        Producto.create(productoNuevo).then(data=>{
+            res.status(201).send(data);
+        })
+    } catch(error) {
         res.status(500).send(error);
-    })
+    }
 }
 
 exports.editarProducto = async (req,res) => {
@@ -22,9 +41,10 @@ exports.editarProducto = async (req,res) => {
         
         let productoId = req.params.productoId;
         
-        const { nombre, descripcion, precio } = req.body;
+        const { nombre, descripcion, precio, categoriaId } = req.body;
 
         const productoNuevo = await Producto.findByPk(productoId);
+
         if (!productoNuevo) {
             return res.status(404).send({ message: "Producto no encontrado" });
         }

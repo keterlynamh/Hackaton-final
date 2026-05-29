@@ -3,9 +3,11 @@ const Cupon = require(`../database/models/cupon-model`);
 exports.crearCupon = (req,res) => {
     const cuponNuevo = {
         codigo: req.body.codigo,
-        descuentoId: req.body.descuentoId,
+        porcentaje: req.body.porcentaje,
         fechaExpiracion: req.body.fechaExpiracion,
+        estado: true
     }
+
     Cupon.create(cuponNuevo).then(data=>{
         res.status(201).send(data);
     }).catch(error=>{
@@ -16,10 +18,10 @@ exports.crearCupon = (req,res) => {
 
 exports.editarCupon = (req,res) => {
     let cuponId = req.param.id;
-    const cuponNuevo = {
-        
+    
+    const cuponNuevo = {    
         codigo: req.body.codigo,
-        descuentoId: req.body.descuentoId,
+        porcentaje: req.body.porcentaje,
         fechaExpiracion: req.body.fechaExpiracion,
     }
     Cupon.update(cuponNuevo,{
@@ -36,6 +38,28 @@ exports.eliminarCupon = (req,res) => {
     Cupon.destroy({
         where: {id: cuponId}
     }).then(data=>{
+        res.status(200).send(data);
+    }).catch(error=>{
+        res.status(500).send(error);
+    })
+}
+
+exports.todosLosCupones= (req,res) => {
+    Cupon.findAll({
+    }).then(data=>{
+        res.status(200).send(data);
+    }).catch(error=>{
+        res.status(500).send(error);
+    })
+}
+
+exports.cuponPorId = (req,res) => {
+    let cuponId = req.params.id;
+
+    Cupon.findByPk(cuponId).then(data=>{
+        if(!data){
+            return res.status(404).send({message:"Cupon no encontrado"})
+        }
         res.status(200).send(data);
     }).catch(error=>{
         res.status(500).send(error);

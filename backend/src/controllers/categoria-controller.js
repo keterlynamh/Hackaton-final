@@ -26,7 +26,7 @@ exports.editarCategoria = async (req,res) => {
         }
 
         categoriaNueva.nombre = nombre;
-        categoriaNueva.editadoPor = usuarioId;
+
         await categoriaNueva.save();
 
         res.status(200).send({
@@ -77,8 +77,7 @@ exports.productosPorCategoria = async (req, res) => {
 
         const categoria = await Categoria.findByPk(id, {
             include: [{
-                model: Producto,
-                as: 'productos'
+                model: Producto
             }]
         });
 
