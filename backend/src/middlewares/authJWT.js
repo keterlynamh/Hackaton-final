@@ -6,7 +6,9 @@ const jwt = require(`jsonwebtoken`);
 const verificarToken = (req, res, next) => {
     
     let token = req.session?.token;
+
     if(!token) return res.status(401).send({message:`No estas enviando el token`});
+
     jwt.verify(token, process.env.JWT_SECRET,(err,decoded)=>{
         if(err) return res.status(401).send({message:`Token invalido`});
         req.usuarioId = decoded.id;
@@ -43,7 +45,7 @@ const esAdmin = async (req,res,next) => {
         
         if (usuario.Rol && usuario.Rol.nombre === "admin") {
             return next();
-        }
+            }
 
         return res.status(403).send({message: `Se requiere rol de admin `});
 
@@ -59,7 +61,9 @@ const esAdminOModerador = async (req,res,next) => {
             include: [{ model: Rol }]
         });
 
-        if(!usuario) return res.status(404).send({message: `Usuario no encontrado`});
+        if(!usuario) {
+            return res.status(404).send({message: `Usuario no encontrado`});
+        }
 
         const rol = usuario.Rol?.nombre;
         
@@ -73,6 +77,7 @@ const esAdminOModerador = async (req,res,next) => {
         return res.status(500).send({message: error.message});
     }
 };
+
 const authJWT = {
     verificarToken,
     esModerador,

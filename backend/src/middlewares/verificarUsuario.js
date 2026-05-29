@@ -19,19 +19,39 @@ const validarEmailUnico = async (req,res,next)=>{
 }
 
 
-const validarRol = (req,res,next) =>{
-    if(req.body.rolId){
-        for (let index = 0; index < req.body.rolId.length; index++) {
-            const rolUsuario = req.body.rolId[index];
+const validarRol = async (req, res, next) => {
+    try {
 
-            if(!Rol.includes(rolUsuario)) {
-                return res.status(400).send({message:`El rol no existe`})
+        //Id
+        if (req.body.rolId) {
+            const rol = await RolModel.findByPk(req.body.rolId);
+
+            if (!rol) {
+                return res.status(400).send({ message: "El rol no existe" });
             }
-            
         }
-    }
 
-    next();
+        //nombre
+        if (req.body.rol) {
+            const rol = await RolModel.findOne({
+                where: { nombre: req.body.rol }
+            });
+
+            if (!rol) {
+                return res.status(400).send({ message: "El rol no existe" });
+            }
+
+            req.body.rolId = rol.id;
+        }
+
+        next();
+
+    } catch (err) {
+        return res.status(500).send({
+            message: "Error al validar rol",
+            error: err.message
+        });
+    }
 };
 
 const verificarLogin = {

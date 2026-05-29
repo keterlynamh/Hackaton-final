@@ -37,15 +37,22 @@ exports.CrearUsuario = async (req, res) => {
     }
 };
 
-exports.editarUsuario = (req,res)=>{
+exports.editarUsuario = async (req,res)=>{
     let usuarioId = req.params.id;
+    
+    const usuario = await Usuario.findByPk(usuarioId);
+    
+    if (!usuario) {
+        
+        return res.status(404).send({ message: "Usuario no encontrado" });
+    }
 
     const usuarioNuevo = {
         nombre: req.body.nombre,
         apellido: req.body.apellido,
         email: req.body.email,
         password:  bcrypt.hashSync(req.body.password, 8),
-        rolId: req.body.rolId,
+        rolId: req.body.rold,
         estado: req.body.estado || true
     };
     Usuario.update(usuarioNuevo,{

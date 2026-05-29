@@ -9,13 +9,13 @@ productoRouter.post(`/`,
     controller.crearProducto
 );
 
-productoRouter.put(`/:id`,
+productoRouter.put(`/:productoId`,
     authJWT.verificarToken,
     authJWT.esAdminOModerador,
     controller.editarProducto
 );
 
-productoRouter.delete(`/:id`,
+productoRouter.delete(`/:productoId`,
     authJWT.verificarToken,
     authJWT.esAdmin,
     controller.eliminarProducto

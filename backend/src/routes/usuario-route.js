@@ -1,13 +1,12 @@
-const express = require(`express`);
 const usuarioRouter = require(`express`).Router();
 const controller = require(`../controllers/usuario-controller`);
-const { verificarUsuario,authJWT } = require(`../middlewares/index`);
+const { verificarUsuario, authJWT } = require(`../middlewares/index`);
 
 
 usuarioRouter.post(`/`,
-        verificarUsuario.validarEmailUnico,
-        verificarUsuario.validarRol,
-        controller.CrearUsuario
+    verificarUsuario.validarEmailUnico,
+    verificarUsuario.validarRol,
+    controller.CrearUsuario
 );
 
 usuarioRouter.post(`/login`, controller.loginUsuario);

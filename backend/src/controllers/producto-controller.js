@@ -6,7 +6,8 @@ exports.crearProducto = (req,res) => {
     const productoNuevo = {
         nombre: req.body.nombre,
         descripcion: req.body.descripcion,
-        precio: req.body.precio
+        precio: req.body.precio,
+        categoriaId: req.body.categoriaId
     };
 
     Producto.create(productoNuevo).then(data=>{
@@ -20,7 +21,6 @@ exports.editarProducto = async (req,res) => {
     try {
         
         let productoId = req.params.productoId;
-        const usuarioId = req.params.usuarioId
         
         const { nombre, descripcion, precio } = req.body;
 
@@ -32,16 +32,17 @@ exports.editarProducto = async (req,res) => {
         productoNuevo.nombre = nombre;
         productoNuevo.descripcion = descripcion;
         productoNuevo.precio = precio;
-        productoNuevo.editadoPor = usuarioId;
+        productoNuevo.categoriaId = categoriaId;
+        
         await productoNuevo.save();
 
         res.status(200).send({
             message: "Producto actualizado",
             productoNuevo
         });
-
+        
     } catch (error) {
-        res.status(500).send({ message: "Error al editar producto", error });
+        res.status(500).send({ message: "Error al editar producto"});
     }
 }
 
