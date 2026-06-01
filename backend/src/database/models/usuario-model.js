@@ -11,8 +11,7 @@ const Usuario = sequelize.define("Usuario",{
     rolId: { type: DataTypes.INTEGER, allowNull: false, references: {
         model: "rols", 
         key: "id"
-  }
-}
+    }}
 }, {tableName: "usuarios"});
 
 module.exports = Usuario;

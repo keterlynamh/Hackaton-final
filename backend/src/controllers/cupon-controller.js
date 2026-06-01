@@ -66,3 +66,10 @@ exports.cuponPorId = (req,res) => {
     })
 }
 
+exports.validarCupon = (req, res) => {
+    res.status(200).json({
+        valido: true,
+        codigo: req.cupon.codigo,
+        porcentaje: req.cupon.porcentaje
+    });
+};
