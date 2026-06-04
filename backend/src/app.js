@@ -12,6 +12,7 @@ const usuarioRouter = require(`./routes/usuario-route`);
 const productoRouter = require(`./routes/producto-route`);
 const categoriaRouter= require(`./routes/categoria-route`);
 const cuponRouter = require(`./routes/cupon-route`);
+const checkoutRouter = require(`./routes/checkout-route`);
 
 
 //config
@@ -38,6 +39,7 @@ app.use(`/api/usuarios`, usuarioRouter);
 app.use(`/api/productos`, productoRouter);
 app.use(`/api/categorias`, categoriaRouter);
 app.use(`/api/cupones`, cuponRouter);
+app.use(`api/checkout`, checkoutRouter);
 
 
 
