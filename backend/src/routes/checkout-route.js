@@ -13,7 +13,7 @@ checkoutRouter.get("/",
     controller.todosLosCheckout
 );
 
-checkoutRouter.get("/",
+checkoutRouter.get("/:id",
     authJWT.verificarToken,
     controller.obtenerCheckoutPorId
 );

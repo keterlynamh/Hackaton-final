@@ -7,6 +7,8 @@ const Categoria = require("./categoria-model");
 const Cupon = require(`./cupon-model`);
 const Checkout = require(`./checkout-model`);
 const DetalleCheckout = require(`./checkout-detalle-model`);
+const Pago = require("./pago-model");
+const { PAGLOCK } = require("sequelize/lib/table-hints");
 
 
 // rol-usuario
@@ -33,4 +35,8 @@ DetalleCheckout.belongsTo(Checkout, {foreignKey: "checkoutId"});
 Producto.hasMany(DetalleCheckout, { foreignKey: "productoId"});
 DetalleCheckout.belongsTo(Producto, { foreignKey: "productoId"});
 
-module.exports = { sequelize, Usuario, Rol, Categoria, Producto, Cupon, Checkout, DetalleCheckout };
+//checkout-pago
+Checkout.hasOne(Pago, { foreignKey: "checkoutId"});
+Pago.belongsTo(Checkout, { foreignKey: "checkoutId"});
+
+module.exports = { sequelize, Usuario, Rol, Categoria, Producto, Cupon, Checkout, DetalleCheckout, Pago };

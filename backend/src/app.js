@@ -13,6 +13,8 @@ const productoRouter = require(`./routes/producto-route`);
 const categoriaRouter= require(`./routes/categoria-route`);
 const cuponRouter = require(`./routes/cupon-route`);
 const checkoutRouter = require(`./routes/checkout-route`);
+const pagoRouter = require("./routes/pago-route");
+const comprasRouter = require("./routes/compras-route");
 
 
 //config
@@ -39,9 +41,9 @@ app.use(`/api/usuarios`, usuarioRouter);
 app.use(`/api/productos`, productoRouter);
 app.use(`/api/categorias`, categoriaRouter);
 app.use(`/api/cupones`, cuponRouter);
-app.use(`api/checkout`, checkoutRouter);
-
-
+app.use(`/api/checkout`, checkoutRouter);
+app.use("/api/pagos", pagoRouter);
+app.use("/api/mis-compras", comprasRouter);
 
 
 module.exports = app;

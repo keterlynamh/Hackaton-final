@@ -46,7 +46,7 @@ exports.crearCheckout = async (req,res) => {
                 });
             }
 
-            if (new Date() > cupon.fechaExporiracion) {
+            if (new Date() > cupon.fechaExpiracion) {
                 return res.status(400).json({
                     message: "Cupón expirado"
                 });
@@ -139,15 +139,14 @@ exports.obtenerCheckoutPorId = async (req, res) => {
         });
 
         if (!checkout) {
-            
-            if (checkout.usuarioId !== req.usuarioId) {
-                return res.status(403).json({
-                    message: "No autorizado"
-                });
-            }
-
             return res.status(404).json({
                 message: "Checkout no encontrado"
+            });
+        }
+
+        if (checkout.usuarioId !== req.usuarioId) {
+            return res.status(403).json({
+                message: "No autorizado"
             });
         }
 
